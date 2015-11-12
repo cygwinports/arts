@@ -1,0 +1,60 @@
+--- origsrc/arts-1.5.10/artsc/artsdsp.c	2007-10-08 04:47:09.000000000 -0500
++++ src/arts-1.5.10/artsc/artsdsp.c	2015-11-11 12:57:51.395931600 -0600
+@@ -41,6 +41,9 @@
+ 
+ #include <artsc.h>
+ #include <dlfcn.h>
++#ifdef __CYGWIN__
++#include <sys/cygwin.h>
++#endif
+ 
+ #include "arts_export.h"
+ /*
+@@ -134,6 +137,11 @@ int munmap(void *start, size_t length);
+ static void artsdsp_doinit()
+ {
+ 	const char *env;
++#ifdef __CYGWIN__
++	static void *RTLD_NEXT = NULL;
++	if (!RTLD_NEXT)
++		RTLD_NEXT = dlopen("/bin/cygwin1.dll", 0);
++#endif
+ 	artsdsp_init = 1;
+ 
+ 	/* debugging? */
+@@ -669,6 +677,21 @@ FILE* fopen(const char *path, const char
+ }
+ #endif
+ 
++#ifdef __CYGWIN__
++__attribute__((constructor))
++void _init(void) {
++	cygwin_internal(CW_HOOK, "open", open);
++	cygwin_internal(CW_HOOK, "close", close);
++	cygwin_internal(CW_HOOK, "write", write);
++	cygwin_internal(CW_HOOK, "read", read);
++	cygwin_internal(CW_HOOK, "ioctl", ioctl);
++	cygwin_internal(CW_HOOK, "mmap", mmap);
++	cygwin_internal(CW_HOOK, "munmap", munmap);
++	cygwin_internal(CW_HOOK, "fopen", fopen);
++	cygwin_internal(CW_HOOK, "access", access);
++}
++#endif
++
+ #endif
+ /*
+  * vim:ts=4
+--- origsrc/arts-1.5.10/artsc/artsdsp.in	2008-08-19 13:10:01.000000000 -0500
++++ src/arts-1.5.10/artsc/artsdsp.in	2015-11-11 12:57:51.400932300 -0600
+@@ -93,9 +93,9 @@ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ 
+ if test "$single_thread" = 1; then
+-  LD_PRELOAD=${exec_prefix}/\$LIB/libartsdsp_st.so.0
++  LD_PRELOAD=${exec_prefix}/lib/cygartsdsp_st.dll
+ else
+-  LD_PRELOAD=${exec_prefix}/\$LIB/libartsdsp.so.0:${exec_prefix}/\$LIB/libartsc.so.0
++  LD_PRELOAD=${exec_prefix}/lib/cygartsdsp.dll
+ fi
+ if test -f ${exec_prefix}/\$LIB/libdl.so.2; then
+   LD_PRELOAD=$LD_PRELOAD:${exec_prefix}/\$LIB/libdl.so.2

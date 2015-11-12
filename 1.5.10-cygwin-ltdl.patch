@@ -1,0 +1,47 @@
+--- origsrc/arts-1.5.10/libltdl/ltdl.c	2015-11-11 12:57:15.588384600 -0600
++++ src/arts-1.5.10/libltdl/ltdl.c	2015-11-11 12:58:07.058920600 -0600
+@@ -76,7 +76,7 @@ Foundation, Inc., 51 Franklin Street, Fi
+ /* --- WINDOWS SUPPORT --- */
+ 
+ 
+-#ifdef DLL_EXPORT
++#if defined(DLL_EXPORT) && defined(__WINDOWS__)
+ #  define LT_GLOBAL_DATA	__declspec(dllexport)
+ #else
+ #  define LT_GLOBAL_DATA
+@@ -533,7 +533,7 @@ rpl_realloc (ptr, size)
+    stderr if its call to LoadLibrary() fails for any reason.  We can
+    mitigate this by not using the Cygwin implementation, and falling
+    back to our own LoadLibrary() wrapper. */
+-#if HAVE_LIBDL && !defined(__CYGWIN__)
++#if HAVE_LIBDL // && !defined(__CYGWIN__)
+ 
+ /* dynamic linking with dlopen/dlsym */
+ 
+@@ -794,7 +794,7 @@ static struct lt_user_dlloader sys_shl =
+ 
+ /* --- LOADLIBRARY() INTERFACE LOADER --- */
+ 
+-#if defined(__WINDOWS__) || defined(__CYGWIN__)
++#if defined(__WINDOWS__) // || defined(__CYGWIN__)
+ 
+ /* dynamic linking for Win32 */
+ 
+@@ -1312,7 +1312,7 @@ lt_dlinit ()
+       handles = 0;
+       user_search_path = 0; /* empty search path */
+ 
+-#if HAVE_LIBDL && !defined(__CYGWIN__)
++#if HAVE_LIBDL // && !defined(__CYGWIN__)
+       errors += lt_dlloader_add (lt_dlloader_next (0), &sys_dl, "dlopen");
+ #ifdef _AIX
+       sys_dl_init();
+@@ -1321,7 +1321,7 @@ lt_dlinit ()
+ #if HAVE_SHL_LOAD
+       errors += lt_dlloader_add (lt_dlloader_next (0), &sys_shl, "dlopen");
+ #endif
+-#if defined(__WINDOWS__) || defined(__CYGWIN__)
++#if defined(__WINDOWS__) // || defined(__CYGWIN__)
+       errors += lt_dlloader_add (lt_dlloader_next (0), &sys_wll, "dlopen");
+ #endif
+ #ifdef __BEOS__

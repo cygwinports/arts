@@ -1,0 +1,11 @@
+--- origsrc/arts-1.5.10/configure.in.in	2008-08-19 14:50:50.000000000 -0500
++++ src/arts-1.5.10/configure.in.in	2015-11-11 14:11:45.022930700 -0600
+@@ -836,7 +836,7 @@ dnl	fi
+ dnl fi
+ dnl AC_SUBST(ARTS_BUILD_KDE)
+ 
+-MCOPIDL='$(top_builddir)/mcopidl/mcopidl'
++MCOPIDL='$(top_builddir)/mcopidl/mcopidl$(EXEEXT)'
+ AC_SUBST(MCOPIDL)
+ 
+ AC_SUBST(ARTS_MAJOR_VERSION)

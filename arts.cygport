@@ -1,0 +1,99 @@
+inherit qt3
+
+NAME="arts"
+VERSION=1.5.10
+RELEASE=2
+CATEGORY="Libs"
+SUMMARY="KDE3 sound synthesizer"
+DESCRIPTION="aRts simulates a complete modular analog synthesizer on your
+computer. Create sounds & music using small modules like oscillators for
+creating waveforms, various filters, modules for playing data on your speakers,
+mixers, faders,... You can build your complete setup with the GUI of the system,
+using the modules - generators, effects and output - connected to each other."
+HOMEPAGE="http://www.kde.org/"
+SRC_URI="mirror://kde/stable/3.5.10/src/arts-${VERSION}.tar.bz2"
+PATCH_URI="
+	fedora/arts-1.1.4-debug.patch
+	fedora/arts-1.3.92-glib2.patch
+	fedora/arts-1.5.0-check_tmp_dir.patch
+	fedora/libltdl-CVE-2009-3736.patch
+	fedora/kde-3.5-libtool-shlibext.patch
+	fedora/kde3-acinclude.patch
+	fedora/kde3-automake-version.patch
+	fedora/kde3-automake-add-missing.patch
+	1.5.10-cygwin-cpuusage.patch
+	1.5.10-cygwin-dsp.patch
+	1.5.10-cygwin-ltdl.patch
+	1.5.10-exeext.patch
+	1.5.10-libtool-modules.patch
+	1.5.10-va_copy.patch
+"
+
+PKG_NAMES="arts libarts1 libgmcop1 libqtmcop1 libarts-devel libartsc0 libartsc-devel"
+arts_CATEGORY="Audio"
+arts_CONTENTS="
+	usr/bin/arts*.exe
+	usr/bin/artsdsp
+	usr/lib/cygartsdsp*.dll
+	usr/lib/cygartscbackend.dll
+	usr/lib/libartscbackend.la
+	usr/share/doc/arts/
+"
+libarts1_SUMMARY="${SUMMARY} core libraries"
+libarts1_CONTENTS="
+	usr/bin/cygartsflow-1.dll
+	usr/bin/cygartsflow_idl-1.dll
+	usr/bin/cygkmedia2_idl-1.dll
+	usr/bin/cygmcop-1.dll
+	usr/bin/cygmcop_mt-1.dll
+	usr/bin/cygsoundserver_idl-1.dll
+	usr/lib/cygartsgslplayobject.dll
+	usr/lib/cygartswavplayobject.dll
+	usr/lib/cygkmedia2.dll
+	usr/lib/cygx11globalcomm.dll
+	usr/lib/libartsgslplayobject.la
+	usr/lib/libartswavplayobject.la
+	usr/lib/libkmedia2.la
+	usr/lib/libx11globalcomm.la
+	usr/lib/mcop/
+"
+libarts_devel_SUMMARY=${libarts1_SUMMARY}
+libarts_devel_CONTENTS="
+	--exclude=libartsc.dll.a
+	usr/bin/mcopidl.exe
+	usr/include/arts/
+	usr/lib/lib*.dll.a
+"
+libartsc0_SUMMARY="${SUMMARY} client library"
+libartsc0_CONTENTS="usr/bin/cygartsc-0.dll"
+libartsc_devel_SUMMARY=${libartsc0_SUMMARY}
+libartsc_devel_CONTENTS="
+	usr/bin/artsc-config
+	usr/include/artsc/
+	usr/lib/libartsc.dll.a
+"
+libgmcop1_SUMMARY="${SUMMARY} GLib mainloop integration"
+libgmcop1_CONTENTS="usr/bin/cyggmcop-1.dll"
+libqtmcop1_SUMMARY="${SUMMARY} Qt mainloop integration"
+libqtmcop1_CONTENTS="usr/bin/cygqtmcop-1.dll"
+# these modules are loaded via LD_PRELOAD, not libltdl
+PKG_IGNORE="usr/lib/libartsdsp*.la"
+
+DIFF_EXCLUDES="aclocal.m4 compile configure config.h.in depcomp install-sh ltmain.sh missing mkinstalldirs Makefile.in"
+
+CPPFLAGS+=" -DFD_SETSIZE=1024"
+
+src_compile() {
+	cd ${S}
+	> admin/libtool.m4.in
+	libtoolize --copy --force --install
+	make -f admin/Makefile.common || error "KDE3 autoreconf failed"
+	cd ${B}
+	cygconf --enable-final --disable-debug --disable-warnings \
+		--disable-dependency-tracking \
+		--disable-new-ldflags --disable-rpath \
+		--disable-libmad --without-alsa
+	cygmake
+}
+
+KEEP_LA_FILES="module"

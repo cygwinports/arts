@@ -1,0 +1,19 @@
+--- origsrc/arts-1.5.10/soundserver/cpuusage.cc	2015-11-11 15:05:17.038805000 -0600
++++ src/arts-1.5.10/soundserver/cpuusage.cc	2015-11-11 14:47:45.765310200 -0600
+@@ -114,14 +114,14 @@ void CPUUsage::check()
+ 	{
+ 		d->usage = cpu_time / real_time;
+ 
+-		if(d->usage > 0.95)	  // more than 95%  -> not good! (probably freeze)
++		if(d->usage > 0.99)	  // more than 99%  -> not good! (but seemingly hard to avoid)
+ 			d->stalled++;
+ 		else
+ 			d->stalled=0;
+ 
+ 		// ok, cancel synthesis due to cpu overload! brutal method
+ 		if(d->stalled > 15)
+-			arts_fatal("cpu overload, aborting");
++			arts_debug("cpu overload detected");;
+ 	}
+ 
+ 	// prepare for next checkpoint

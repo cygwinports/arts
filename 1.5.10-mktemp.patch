@@ -1,0 +1,29 @@
+--- origsrc/arts-1.5.10/mcop/mcoputils.cc	2015-11-11 17:05:44.874623500 -0600
++++ src/arts-1.5.10/mcop/mcoputils.cc	2015-11-11 17:35:32.781158800 -0600
+@@ -315,7 +315,7 @@ int build_link(const char *tmp_prefix, c
+      if (result == 0) return 0; /* Success */
+      unlink(kde_tmp_dir);
+      strncat(user_tmp_dir, "XXXXXX", PATH_MAX - strlen(user_tmp_dir));
+-     mktemp(user_tmp_dir); /* We want a directory, not a file, so using mkstemp makes no sense and is wrong */
++     mkdtemp(user_tmp_dir);
+      return create_link(kde_tmp_dir, user_tmp_dir);
+   }
+   if ((result == -1) || (!S_ISLNK(stat_buf.st_mode)))
+@@ -341,7 +341,7 @@ int build_link(const char *tmp_prefix, c
+      if (result == 0) return 0; /* Success */
+      unlink(kde_tmp_dir);
+      strncat(user_tmp_dir, "XXXXXX", PATH_MAX - strlen(user_tmp_dir));
+-     mktemp(user_tmp_dir); /* We want a directory, not a file, so using mkstemp makes no sense and is wrong */
++     mkdtemp(user_tmp_dir);
+      return create_link(kde_tmp_dir, user_tmp_dir);
+      return 1;
+   }
+@@ -349,7 +349,7 @@ int build_link(const char *tmp_prefix, c
+   if (result == 0) return 0; /* Success */
+   unlink(kde_tmp_dir);
+   strncat(user_tmp_dir, "XXXXXX", PATH_MAX - strlen(user_tmp_dir));
+-  mktemp(user_tmp_dir); /* We want a directory, not a file, so using mkstemp makes no sense and is wrong */
++  mkdtemp(user_tmp_dir);
+   return create_link(kde_tmp_dir, user_tmp_dir);
+ }
+ 

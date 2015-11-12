@@ -1,0 +1,61 @@
+--- origsrc/arts-1.5.10/artsc/Makefile.am	2005-09-10 03:13:34.000000000 -0500
++++ src/arts-1.5.10/artsc/Makefile.am	2015-11-11 13:00:06.982648900 -0600
+@@ -10,11 +10,11 @@ INCLUDES = -I$(top_srcdir)/mcop -I$(top_
+ bin_SCRIPTS = artsc-config artsdsp
+ 
+ libartsdsp_la_SOURCES = artsdsp.c
+-libartsdsp_la_LDFLAGS = -no-undefined -module $(all_libraries)
++libartsdsp_la_LDFLAGS = -no-undefined -module -avoid-version $(all_libraries)
+ libartsdsp_la_LIBADD = libartsc.la
+ 
+ libartsdsp_st_la_SOURCES = artsc.c artsdsp.c
+-libartsdsp_st_la_LDFLAGS = -no-undefined -module $(all_libraries)
++libartsdsp_st_la_LDFLAGS = -no-undefined -module -avoid-version $(all_libraries)
+ libartsdsp_st_la_LIBADD = $(top_builddir)/libltdl/libltdlc.la
+ 
+ libartsc_la_SOURCES = artsc.c
+@@ -22,7 +22,7 @@ libartsc_la_LDFLAGS = -no-undefined $(US
+ libartsc_la_LIBADD = $(top_builddir)/libltdl/libltdlc.la $(LIBPTHREAD)
+ 
+ libartscbackend_la_SOURCES = artscbackend.cc
+-libartscbackend_la_LDFLAGS = -no-undefined -module $(KDE_RPATH) $(all_libraries)
++libartscbackend_la_LDFLAGS = -no-undefined -module -avoid-version $(KDE_RPATH) $(all_libraries)
+ libartscbackend_la_LIBADD = $(FLOWLIBS) \
+     $(top_builddir)/soundserver/libsoundserver_idl.la
+ 
+--- origsrc/arts-1.5.10/soundserver/Makefile.am	2005-09-10 03:13:31.000000000 -0500
++++ src/arts-1.5.10/soundserver/Makefile.am	2015-11-11 12:59:25.061825700 -0600
+@@ -34,19 +34,19 @@ libkmedia2_idl_la_LDFLAGS = -no-undefine
+ 
+ libkmedia2_la_SOURCES = fileinputstream_impl.cc stdoutwriter_impl.cc
+ libkmedia2_la_LIBADD  = libkmedia2_idl.la $(FLOWLIBS)
+-libkmedia2_la_LDFLAGS = -no-undefined -version-info 1:0 $(all_libraries)
++libkmedia2_la_LDFLAGS = -no-undefined -module -avoid-version $(all_libraries)
+ libkmedia2_la_COMPILE_FIRST = kmedia2.h ../flow/artsflow.h
+ 
+ libartswavplayobject_la_SOURCES = wavplayobject_impl.cc
+ libartswavplayobject_la_LIBADD  = $(top_builddir)/mcop/libmcop.la \
+                                   libsoundserver_idl.la $(FLOWLIBS)
+-libartswavplayobject_la_LDFLAGS = -no-undefined -module $(all_libraries)
++libartswavplayobject_la_LDFLAGS = -no-undefined -module -avoid-version $(all_libraries)
+ libartswavplayobject_la_COMPILE_FIRST = soundserver.h ../flow/artsflow.h
+ 
+ libartsgslplayobject_la_SOURCES = gslplayobject_impl.cc
+ libartsgslplayobject_la_LIBADD  = $(top_builddir)/mcop/libmcop.la \
+                                   libsoundserver_idl.la $(FLOWLIBS)
+-libartsgslplayobject_la_LDFLAGS = -no-undefined -module $(all_libraries)
++libartsgslplayobject_la_LDFLAGS = -no-undefined -module -avoid-version $(all_libraries)
+ libartsgslplayobject_la_COMPILE_FIRST = soundserver.h ../flow/artsflow.h
+ 
+ ###### "real" programs
+--- origsrc/arts-1.5.10/x11/Makefile.am	2005-09-10 03:13:34.000000000 -0500
++++ src/arts-1.5.10/x11/Makefile.am	2015-11-11 13:08:44.465861000 -0600
+@@ -6,7 +6,7 @@ lib_LTLIBRARIES = libx11globalcomm.la
+ 
+ libx11globalcomm_la_SOURCES = x11globalcomm.cc x11globalcomm_impl.cc
+ libx11globalcomm_la_LIBADD = $(top_builddir)/mcop/libmcop.la $(LIB_X11)
+-libx11globalcomm_la_LDFLAGS = -no-undefined -module -version-info 1:0 $(X_LDFLAGS) $(all_libraries)
++libx11globalcomm_la_LDFLAGS = -no-undefined -module -avoid-version $(X_LDFLAGS) $(all_libraries)
+ 
+ DISTCLEANFILES = x11globalcomm.cc x11globalcomm.h \
+                  x11globalcomm.mcoptype x11globalcomm.mcopclass

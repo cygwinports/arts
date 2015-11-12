@@ -1,0 +1,24 @@
+--- origsrc/arts-1.5.10/mcop/debug.cc	2005-10-10 09:52:27.000000000 -0500
++++ src/arts-1.5.10/mcop/debug.cc	2015-11-11 17:17:46.213221900 -0600
+@@ -23,6 +23,9 @@
+ 
+     */
+ 
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
+ #include "debug.h"
+ #include <stdlib.h>
+ #include <stdarg.h>
+--- origsrc/arts-1.5.10/flow/gsl/configure.in.in	2008-02-13 03:35:23.000000000 -0600
++++ src/arts-1.5.10/flow/gsl/configure.in.in	2015-11-11 17:03:19.128616200 -0600
+@@ -202,6 +202,9 @@ else if test "x$glib_cv___va_copy" = "xy
+   g_va_copy_func=__va_copy
+ fi
+ fi
++if test "x$g_va_copy_func" != "x"; then
++  AC_DEFINE_UNQUOTED([G_VA_COPY],[$g_va_copy_func],[System va_copy function])
++fi
+ ])
+ 
+ AC_GSL_REQUIREMENTS
