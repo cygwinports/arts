@@ -1,0 +1,21 @@
+--- origsrc/arts-1.5.10/mcop/debug.cc	2017-12-26 00:11:40.826644200 -0600
++++ src/arts-1.5.10/mcop/debug.cc	2017-12-26 00:17:55.529458800 -0600
+@@ -30,7 +30,7 @@
+ #include <stdlib.h>
+ #include <stdarg.h>
+ #include <stdio.h>
+-#include <string.h>
++#include <cstring>
+ #include "thread.h"
+ 
+ static int arts_debug_level = Arts::Debug::lInfo;
+--- origsrc/arts-1.5.10/mcop/mcoputils.cc	2017-12-26 12:45:06.084514900 -0600
++++ src/arts-1.5.10/mcop/mcoputils.cc	2017-12-26 15:56:30.723286600 -0600
+@@ -35,6 +35,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ #include <stdio.h>
++#include <limits.h>
+ #include <map>
+ 	
+ using namespace std;
